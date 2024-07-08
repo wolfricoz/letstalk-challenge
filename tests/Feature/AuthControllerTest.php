@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -42,29 +43,17 @@ class AuthControllerTest extends TestCase
         $this->assertGuest();
     }
 
-    public function testAuthenticate()
-    {
-        $user = User::factory()->create([
-            'password' => Hash::make('Password123456'),
-        ]);
-
-        $response = $this->post(route('login.authenticate'), [
-            'email' => $user->email,
-            'password' => 'Password123456',
-        ]);
-
-        $response->assertRedirect(route('home'));
-        $this->assertAuthenticatedAs($user);
-    }
-
     public function testStore()
     {
+        $this->artisan("ip:allow 127.0.0.1")->assertExitCode(0);
         $userData = [
             'name' => 'Test User',
             'email' => 'testuser@example.com',
             'password' => 'Password123456',
             'password_confirmation' => 'Password123456',
         ];
+
+
 
         $response = $this->put(route('register.store'), $userData);
 
@@ -79,4 +68,21 @@ class AuthControllerTest extends TestCase
         $this->assertTrue(Hash::check('Password123456', $user->password));
         $this->assertAuthenticatedAs($user);
     }
+
+    public function testAuthenticate()
+    {
+        $this->artisan("ip:allow 127.0.0.1")->assertExitCode(0);
+        $user = User::factory()->create([
+            'password' => Hash::make('Password123456'),
+        ]);
+        $response = $this->post(route('login.authenticate'), [
+            'email' => $user->email,
+            'password' => 'Password123456',
+        ]);
+
+        $response->assertRedirect(route('home'));
+        $this->assertAuthenticatedAs($user);
+    }
+
+
 }

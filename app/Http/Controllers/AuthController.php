@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\auth;
+use App\Models\IpTable;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -27,6 +28,11 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
+
+        if(!IpTable::check($request->ip())){
+            return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
+        }
+
         $logindata =  $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:12',
@@ -43,12 +49,16 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|min:6',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:12|confirmed',
             'password_confirmation' => 'required|min:12|same:password',
         ]);
+        if(!IpTable::check($request->ip())){
+            return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -56,7 +66,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        auth()->login($user);
+        auth()->login($user, $request->has('remember'));
 
         return redirect()->route('home');
     }

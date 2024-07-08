@@ -19,12 +19,12 @@
         </div>
         <div>
             <label for="password">Password</label>
-            <input id="password" type="text" name="password" class="block" required wire:model.live="password">
+            <input id="password" type="password" name="password" class="block" required wire:model.live="password">
 
         </div>
         <div>
             <label for="password_confirmation">Confirm Password</label>
-            <input id="password_confirmation" class="block" type="text" name="password_confirmation" wire:model.live="password_confirmation" required>
+            <input id="password_confirmation" class="block" type="password" name="password_confirmation" wire:model.live="password_confirmation" required>
 
         </div>
         @if ($errors->any())

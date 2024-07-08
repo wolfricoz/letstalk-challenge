@@ -8,8 +8,12 @@
         </div>
         <div>
             <label for="password">Password</label>
-            <input id="password" type="text" name="password" class="block" required wire:model.live="password">
+            <input id="password" type="password" name="password" class="block" required wire:model.live="password">
         </div>
+        <label>
+            Remember Me
+            <input type="checkbox" name="remember">
+        </label>
         @if ($errors->any())
             <div>
                 <ul>
