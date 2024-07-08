@@ -12,6 +12,11 @@ class CurrencyConversion extends Component
     public $amount;
     public $calculated = [];
 
+    public $rules = [
+        'selectedCurrency' => 'required',
+        'amount' => 'required|numeric'
+    ];
+
     public function mount($availableCurrencies)
     {
         $this->availableCurrenties = $availableCurrencies;
@@ -19,11 +24,13 @@ class CurrencyConversion extends Component
 
     public function calculate()
     {
-        $conversions = Conversions::where('from_currencies_id', '=', $this->selectedCurrency)->get();
+        $this->validate();
+        $conversions = Conversions::all()->where('from_currencies_id', '=', $this->selectedCurrency);
         foreach ($conversions as $conversion)
         {
-
+            $this->calculated[$conversion->name] = round($this->amount * $conversion->rate, 2, PHP_ROUND_HALF_UP);
         }
+        $this->render();
     }
 
 
