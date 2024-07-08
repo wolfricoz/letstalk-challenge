@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Conversions;
 use App\Models\Currency;
+use DOMDocument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -25,15 +26,16 @@ class UpdateCurrencies extends Command
 
     public $currencyLocations = [];
 
-    private function addCurrencyToCurrency(array $currencyresponse)
+    private function addCurrencyToCurrency(array $currencyresponse): void
     {
         foreach ($currencyresponse as $currency) {
-            $currencyExists = Currency::where('name', '=', strtolower($currency['code']))->first();
+            $currencyName = strtolower($currency['code']);
+            $currencyExists = Currency::where('name', '=', $currencyName)->first();
             if ($currencyExists) {
                 $this->currencyLocations[strtolower($currencyExists->name)] = $currencyExists->id;
             }
             if (!$currencyExists) {
-                $entry = Currency::create(['name' => (strtolower($currency['code']))]);
+                $entry = Currency::create(['name' => ($currencyName)]);
                 $this->currencyLocations[$entry->name] = $entry->id;
             }
         }
@@ -49,27 +51,31 @@ class UpdateCurrencies extends Command
         }
 
 
-            if (!array_key_exists($name, $this->currencyLocations)) {
-                echo $name . PHP_EOL;
-                $entry = Currency::create(['name' => $name]);
+        if (!array_key_exists($name, $this->currencyLocations)) {
+            echo $name . PHP_EOL;
+            $entry = Currency::create(['name' => $name]);
+            $this->currencyLocations[$entry->name] = $entry->id;
+        }
+        foreach ($currencyresponse as $currency) {
+            $currencyName = strtolower($currency['code']);
+            if (!array_key_exists($currencyName, $this->currencyLocations)) {
+                $entry = Currency::create(['name' => $currencyName]);
                 $this->currencyLocations[$entry->name] = $entry->id;
             }
-            foreach ($currencyresponse as $currency) {
-                if (!array_key_exists(strtolower($currency['code']), $this->currencyLocations)) {
-                    $entry = Currency::create(['name' => strtolower($currency['code'])]);
-                    $this->currencyLocations[$entry->name] = $entry->id;
-                }
-                $entry = Conversions::where('from_currencies_id', '=', $this->currencyLocations[$name])->where('to_currencies_id', '=', $this->currencyLocations[strtolower($currency['code'])]);
-                if ($entry) {
-                    $entry->update(['rate' => $currency['rate']]);
-                    continue;
-                }
-
-
-                Conversions::create(['from_currencies_id' => $this->currencyLocations[$name], 'to_currencies_id' =>
-                    $this->currencyLocations[strtolower($currency['code'])], 'rate'
-                => $currency['rate']]);
+            $entry = Conversions::where('from_currencies_id', '=', $this->currencyLocations[$name])->where('to_currencies_id', '=', $this->currencyLocations[$currencyName])->first();
+            if ($entry) {
+                $entry->update(['rate' => $currency['rate']]);
+                continue;
             }
+
+
+            Conversions::create([
+                'from_currencies_id' => $this->currencyLocations[$name],
+                'to_currencies_id' => $this->currencyLocations[$currencyName],
+                'rate' => $currency['rate'],
+                'name' => $currencyName
+            ]);
+        }
 
 
     }
@@ -77,11 +83,11 @@ class UpdateCurrencies extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
 //      This gets the webpage and parses it for all the urls.
-        $response = Http::get('http://www.floatrates.com/json-feeds.html');
-        $dom = new \DOMDocument();
+        $response = Http::get('https://www.floatrates.com/json-feeds.html');
+        $dom = new DOMDocument();
         @$dom->loadHTML($response->body());
         $links = $dom->getElementsByTagName('a');
         $urls = [];
