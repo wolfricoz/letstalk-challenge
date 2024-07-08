@@ -6,7 +6,7 @@
 	<div>
 		@auth()
 			<p1> Logged in: {{ auth()->user()->name }}</p1>
-			<a href="{{ _('dashboard') }}">Dashboard</a>
+			<a href="{{  route('dashboard')  }}">Dashboard</a>
 			<form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit">Logout</button>
