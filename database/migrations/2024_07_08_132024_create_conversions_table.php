@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::create('conversions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('name');
+            $table->foreignId('from_currencies_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('to_currencies_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->float('rate');
+
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('conversions');
     }
 };
