@@ -76,8 +76,6 @@ class AuthControllerTest extends TestCase
         ]);
 
         $user = User::where('email', 'testuser@example.com')->first();
-        echo crypt::encrypt('Password123456') . PHP_EOL;
-
         $this->assertTrue(Hash::check('Password123456', $user->password));
         $this->assertAuthenticatedAs($user);
     }
