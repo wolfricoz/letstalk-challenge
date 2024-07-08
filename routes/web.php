@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-
+// coding challenge resumed
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
