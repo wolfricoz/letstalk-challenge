@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -16,6 +17,11 @@ class AuthController extends Controller
     public function register()
     {
         return view('auth.register');
+    }
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('home');
     }
 
     public function store(Request $request)
