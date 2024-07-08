@@ -6,6 +6,7 @@ use App\Http\Middleware\auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,22 @@ class AuthController extends Controller
     {
         auth()->logout();
         return redirect()->route('home');
+    }
+
+    public function authenticate(Request $request)
+    {
+        $logindata =  $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:12',
+        ]);
+        $user = User::where('email', $logindata['email'])->first();
+        if ($user && hash::check($logindata['password'], $user->password)) {
+            auth()->login($user);
+            return redirect()->route('home');
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records. ',
+        ]);
     }
 
     public function store(Request $request)
