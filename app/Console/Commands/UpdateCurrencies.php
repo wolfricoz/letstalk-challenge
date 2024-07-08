@@ -7,6 +7,7 @@ use App\Models\Currency;
 use DOMDocument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class UpdateCurrencies extends Command
 {
@@ -24,7 +25,7 @@ class UpdateCurrencies extends Command
      */
     protected $description = 'Command description';
 
-    public $currencyLocations = [];
+    public array $currencyLocations = [];
 
     private function addCurrencyToCurrency(array $currencyresponse): void
     {
@@ -43,16 +44,9 @@ class UpdateCurrencies extends Command
 
     }
 
-    private function addConversionToCurrency($currencyresponse, $name)
+    private function addConversionToCurrency(array $currencyresponse, $name)
     {
-        if (!$currencyresponse) {
-            echo "Currency response is Null for" . $name;
-            return;
-        }
-
-
         if (!array_key_exists($name, $this->currencyLocations)) {
-            echo $name . PHP_EOL;
             $entry = Currency::create(['name' => $name]);
             $this->currencyLocations[$entry->name] = $entry->id;
         }
@@ -64,11 +58,12 @@ class UpdateCurrencies extends Command
             }
             $entry = Conversions::where('from_currencies_id', '=', $this->currencyLocations[$name])->where('to_currencies_id', '=', $this->currencyLocations[$currencyName])->first();
             if ($entry) {
+                Log::info('Updating conversion from ' . $name . ' to ' . $currency['rate']);
                 $entry->update(['rate' => $currency['rate']]);
                 continue;
             }
 
-
+            Log::info('Adding conversion from ' . $name . ' to ' . $currencyName);
             Conversions::create([
                 'from_currencies_id' => $this->currencyLocations[$name],
                 'to_currencies_id' => $this->currencyLocations[$currencyName],
@@ -115,6 +110,7 @@ class UpdateCurrencies extends Command
             if ($endswithjson) {
                 $currencyresponse = Http::get($url)->json();
                 if (!$currencyresponse) {
+                    Log::error('Currency response is Null for' . $name);
                     continue;
                 }
                 // This adds conversion data to the conversion table

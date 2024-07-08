@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -30,6 +31,7 @@ class AuthController extends Controller
     {
 
         if(!IpTable::check($request->ip())){
+            Log::info('Unauthorized IP: ' . $request->ip());
             return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
         }
 
@@ -57,6 +59,7 @@ class AuthController extends Controller
             'password_confirmation' => 'required|min:12|same:password',
         ]);
         if(!IpTable::check($request->ip())){
+            Log::info('Unauthorized IP: ' . $request->ip());
             return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
         }
 
