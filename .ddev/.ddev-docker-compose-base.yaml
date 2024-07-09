@@ -8,14 +8,14 @@ services:
       context: './.dbimageBuild'
       args:
         BASE_IMAGE: $DDEV_DBIMAGE
-        username: 'rico'
+        username: 'ricoi'
         uid: '1000'
         gid:  1000 
     image: ${DDEV_DBIMAGE}-${DDEV_SITENAME}-built
     cap_add:
       - SYS_NICE
     stop_grace_period: 60s
-    working_dir: "/home/rico"
+    working_dir: "/home/ricoi"
     volumes:
       - type: "volume"
         source: "database"
@@ -69,13 +69,13 @@ services:
       - POSTGRES_USER=db
       - POSTGRES_DB=db
       - TZ=
-      - USER=rico
+      - USER=ricoi
     command: ${DDEV_DB_CONTAINER_COMMAND}
     healthcheck:
       
       interval: 1s
       retries: 120
-      start_period: "120s"
+      start_period: "240s"
       
       start_interval: 1s
       
@@ -88,7 +88,7 @@ services:
       context: './.webimageBuild'
       args:
         BASE_IMAGE: $DDEV_WEBIMAGE
-        username: 'rico'
+        username: 'ricoi'
         uid: '1000'
         gid: '1000'
         DDEV_PHP_VERSION: ${DDEV_PHP_VERSION}
@@ -181,7 +181,7 @@ services:
     - PHP_IDE_CONFIG=serverName=${DDEV_SITENAME}.${DDEV_TLD}
     - SSH_AUTH_SOCK=/home/.ssh-agent/socket
     - TZ=
-    - USER=rico
+    - USER=ricoi
     - VIRTUAL_HOST=${DDEV_HOSTNAME}
     
     labels:
@@ -200,7 +200,7 @@ services:
     healthcheck:
       interval: 1s
       retries: 120
-      start_period: "120s"
+      start_period: "240s"
       
       start_interval: 1s
       

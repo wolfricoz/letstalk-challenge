@@ -14,8 +14,8 @@ services:
                 BASE_IMAGE: ddev/ddev-dbserver-mariadb-10.11:v1.23.3
                 gid: "1000"
                 uid: "1000"
-                username: rico
-            context: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/.dbimageBuild
+                username: ricoi
+            context: C:\Users\ricoi\PhpstormProjects\letstalk-challenge\.ddev\.dbimageBuild
             dockerfile: Dockerfile
         cap_add:
             - SYS_NICE
@@ -36,7 +36,7 @@ services:
             DDEV_TLD: ddev.site
             DOCKER_IP: 127.0.0.1
             GOARCH: amd64
-            GOOS: linux
+            GOOS: windows
             HOST_DOCKER_INTERNAL_IP: ""
             IS_DDEV_PROJECT: "true"
             LINES: "14"
@@ -50,18 +50,18 @@ services:
             POSTGRES_PASSWORD: db
             POSTGRES_USER: db
             TZ: ""
-            USER: rico
+            USER: ricoi
         healthcheck:
             interval: 1s
             retries: 120
             start_interval: 1s
-            start_period: 2m0s
+            start_period: 4m0s
             timeout: 1m10s
         hostname: letstalk-challenge-db
         image: ddev/ddev-dbserver-mariadb-10.11:v1.23.3-letstalk-challenge-built
         labels:
             com.ddev.app-type: laravel
-            com.ddev.approot: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge
+            com.ddev.approot: C:\Users\ricoi\PhpstormProjects\letstalk-challenge
             com.ddev.platform: ddev
             com.ddev.site-name: letstalk-challenge
         networks:
@@ -83,19 +83,54 @@ services:
                 nocopy: true
             - bind:
                 create_host_path: true
-              source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev
               target: /mnt/ddev_config
               type: bind
             - bind:
                 create_host_path: true
-              source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/db_snapshots
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/db_snapshots
               target: /mnt/snapshots
               type: bind
             - source: ddev-global-cache
               target: /mnt/ddev-global-cache
               type: volume
               volume: {}
-        working_dir: /home/rico
+        working_dir: /home/ricoi
+    elasticsearch:
+        container_name: ddev-letstalk-challenge-elasticsearch
+        environment:
+            ES_JAVA_OPTS: -Xms512m -Xmx512m
+            HTTP_EXPOSE: 9200:9200
+            HTTPS_EXPOSE: 9201:9200
+            VIRTUAL_HOST: letstalk-challenge.ddev.site
+            bootstrap.memory_lock: "true"
+            cluster.name: docker-cluster
+            discovery.type: single-node
+        expose:
+            - "9200"
+            - "9300"
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - curl --fail -s elasticsearch:9200
+        hostname: letstalk-challenge-elasticsearch
+        image: elasticsearch:7.17.14
+        labels:
+            com.ddev.approot: C:\Users\ricoi\PhpstormProjects\letstalk-challenge
+            com.ddev.site-name: letstalk-challenge
+        networks:
+            ddev_default: null
+            default: null
+        volumes:
+            - source: elasticsearch
+              target: /usr/share/elasticsearch/data
+              type: volume
+              volume: {}
+            - bind:
+                create_host_path: true
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev
+              target: /mnt/ddev_config
+              type: bind
     web:
         build:
             args:
@@ -104,8 +139,8 @@ services:
                 DDEV_PHP_VERSION: "8.2"
                 gid: "1000"
                 uid: "1000"
-                username: rico
-            context: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/.webimageBuild
+                username: ricoi
+            context: C:\Users\ricoi\PhpstormProjects\letstalk-challenge\.ddev\.webimageBuild
             dockerfile: Dockerfile
         cap_add:
             - SYS_PTRACE
@@ -142,7 +177,7 @@ services:
             DRUSH_ALLOW_XDEBUG: "1"
             DRUSH_OPTIONS_URI: https://letstalk-challenge.ddev.site
             GOARCH: amd64
-            GOOS: linux
+            GOOS: windows
             HOST_DOCKER_INTERNAL_IP: ""
             HTTP_EXPOSE: 80:80,8025:8025,5172:5173
             HTTPS_EXPOSE: 443:80,8026:8025,5173:5173
@@ -158,7 +193,7 @@ services:
             PHP_IDE_CONFIG: serverName=letstalk-challenge.ddev.site
             SSH_AUTH_SOCK: /home/.ssh-agent/socket
             TZ: ""
-            USER: rico
+            USER: ricoi
             VIRTUAL_HOST: letstalk-challenge.ddev.site
             npm_config_cache: /mnt/ddev-global-cache/npm
         expose:
@@ -169,13 +204,13 @@ services:
             interval: 1s
             retries: 120
             start_interval: 1s
-            start_period: 2m0s
+            start_period: 4m0s
             timeout: 1m10s
         hostname: letstalk-challenge-web
         image: ddev/ddev-webserver:v1.23.3-letstalk-challenge-built
         labels:
             com.ddev.app-type: laravel
-            com.ddev.approot: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge
+            com.ddev.approot: C:\Users\ricoi\PhpstormProjects\letstalk-challenge
             com.ddev.platform: ddev
             com.ddev.site-name: letstalk-challenge
         networks:
@@ -194,19 +229,19 @@ services:
         user: 1000:1000
         volumes:
             - consistency: cached
-              source: ../
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge
               target: /var/www/html
               type: bind
             - bind:
                 create_host_path: true
               read_only: true
-              source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev
               target: /mnt/ddev_config
               type: bind
             - bind:
                 create_host_path: true
               read_only: true
-              source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/xhprof
+              source: /c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/xhprof
               target: /usr/local/bin/xhprof
               type: bind
             - source: ddev-global-cache
@@ -228,3 +263,5 @@ volumes:
     ddev-ssh-agent_socket_dir:
         external: true
         name: ddev-ssh-agent_socket_dir
+    elasticsearch:
+        name: ddev-letstalk-challenge_elasticsearch
