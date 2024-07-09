@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -14,4 +15,6 @@ class DashboardController extends Controller
             'currency' => Currency::all()
             ]);
     }
+
 }
+

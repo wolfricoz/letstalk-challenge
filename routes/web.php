@@ -23,5 +23,10 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('register', [AuthController::class, 'register'])->name('register');
     Route::put('register', [AuthController::class, 'store'])->name('register.store');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('reset-password/{id?}/{reset_token?}', [PasswordController::class, 'index'])->name('reset-password');
+    Route::get('reset-password/{reset_token?}', [PasswordController::class, 'index'])->name('reset-password');
+    Route::post('request-reset', [PasswordController::class, 'store'])->name('request-reset');
+    Route::get('confirmation', function () {
+       return view('auth.confirmation');
+    })->name('confirmation');
+    Route::patch('reset-password/{user}', [PasswordController::class, 'update'])->name('reset-password.update');
 });
