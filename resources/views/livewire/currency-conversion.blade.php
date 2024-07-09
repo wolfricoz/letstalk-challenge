@@ -1,6 +1,7 @@
 <div class="bg-gray-300 rounded-xl w-2/3 p-4">
 
-    <form wire:submit.prevent="calculate" class="flex flex-col justify-center">
+    <form wire:submit.prevent="calculate" class="flex flex-col justify-center gap-4">
+        <h1 class="text-2xl font-bold text-center">Currency Conversion</h1>
         <div class="inline-flex gap-4 it justify-center">
             <input type="number" wire:model="amount"  class="rounded-xl"/>
 
