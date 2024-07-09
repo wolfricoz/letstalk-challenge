@@ -10,6 +10,10 @@ Route::get('/', function () {
 Route::group(['prefix' => 'dashboard'], function () {
     Route::get('/', [DashboardController::class, 'index'])->middleware(auth::class)->name('dashboard');
 });
+Route::get('/unauthorized', function () {
+    return view('unauthorized');
+})->name('unauthorized');
+
 
 
 Route::group(['prefix' => 'auth'], function () {
