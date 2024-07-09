@@ -30,24 +30,19 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
-
-        if(!IpTable::check($request->ip())){
-            Log::info('Unauthorized IP: ' . $request->ip());
-            return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
-        }
-
         $logindata =  $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:12',
         ]);
-        $user = User::where('email', $logindata['email'])->first();
-        if ($user && hash::check($logindata['password'], $user->password)) {
-            auth()->login($user);
-            return redirect()->route('home');
+
+        $result = Authenticate::checkIp($request)->getUser($logindata['email'], $logindata['password'])->loginUser();
+
+        if (!$result){
+            return redirect()->back()->withErrors([
+                'email' => 'The provided credentials do not match our records. ',
+            ]);
         }
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records. ',
-        ]);
+        return redirect()->route('dashboard');
     }
 
     public function store(Request $request)

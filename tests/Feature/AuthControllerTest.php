@@ -80,7 +80,7 @@ class AuthControllerTest extends TestCase
             'password' => 'Password123456',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
     }
 

@@ -4,6 +4,7 @@ namespace App\authentication;
 
 use App\Models\IpTable;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -18,48 +19,64 @@ class Authenticate
         $this->user = $user;
         $this->request = $request;
     }
-    public function createUser(array $data)
+
+    public function createUser(array $data): static
     {
         $this->user = User::create($data);
         return $this;
     }
 
-    public function ipCheck()
+    public function ipCheck(): static|RedirectResponse
     {
-        if(!IpTable::check($this->request->ip())){
+        if (!IpTable::check($this->request->ip())) {
             Log::info('Unauthorized IP: ' . $this->request->ip());
             return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
         }
         return $this;
     }
 
-
-    public function loginUser()
+    public function getUser($email, $password)
     {
-
-
-        auth()->login($this->user, $this->request->has('remember'));
+        $user = User::where('email', $email)->first();
+        if ($user && hash::check($password, $user->password)) {
+            $this->user = $user;
+            return $this;
+        }
+        return $this;
     }
 
-    public static function checkIp(Request $request)
+    public function loginUser(User|null $user = null)
+    {
+        if ($user) {
+            $this->user = $user;
+        }
+        if (!$this->user)
+        {
+            return false;
+        }
+        auth()->login($this->user, $this->request->has('remember'));
+        return true;
+    }
+
+    public static function checkIp(Request $request): static
     {
         $instance = new self(null, $request);
-        $instance->ipCheck($request);
+        $instance->ipCheck();
         return $instance;
     }
 
-    public static function create(array $data, Request $request)
+    public static function create(array $data, Request $request): static
     {
         $instance = new self(null, $request);
         $instance->createUser($data);
         return $instance;
     }
 
-    public static function login(Request $request, $user)
+    public static function login(Request $request, $user): bool
     {
 
         $instance = new self($user, $request);
-        $instance->loginUser();
-        return $instance;
+        return $instance->loginUser();
+
     }
 }
