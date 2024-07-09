@@ -1,6 +1,6 @@
 <div>
     <h1 class="text-2xl font-bold text-center">Login</h1>
-    <form method="POST" action="{{ route('login.authenticate') }}">
+    <form method="POST" action="{{ route('auth.login.authenticate') }}">
         @csrf
         <div>
             <label for="email">Email</label>
@@ -31,7 +31,7 @@
                 Login
             </x-primary-button>
 
-            <a href="{{ route('reset-password') }}">
+            <a href="{{ route('auth.reset-password') }}">
                 Reset Password?
             </a>
         </div>

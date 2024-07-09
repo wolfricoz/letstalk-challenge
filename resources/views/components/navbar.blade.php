@@ -13,13 +13,13 @@
 	<div>
 		@auth()
 			<a href="{{  route('dashboard')  }}">Dashboard</a>
-			<form method="POST" action="{{ route('logout') }}" class="inline-flex">
+			<form method="POST" action="{{ route('auth.logout') }}" class="inline-flex">
                 @csrf
                 <button type="submit">Logout</button>
             </form>
 		@else
-			<a href="{{ route('login') }}">Login</a>
-			<a href="{{ route('register') }}">Register</a>
+			<a href="{{ route('auth.login') }}">Login</a>
+			<a href="{{ route('auth.register') }}">Register</a>
 		@endauth
 	</div>
 </div>

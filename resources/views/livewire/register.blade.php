@@ -1,6 +1,6 @@
 <div>
     <h1 class="text-2xl font-bold text-center">Register</h1>
-    <form method="POST" action="{{ route('register.store') }}">
+    <form method="POST" action="{{ route('auth.register.store') }}">
         @method('PUT')
         @csrf
         <div>

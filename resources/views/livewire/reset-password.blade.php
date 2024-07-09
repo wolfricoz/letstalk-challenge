@@ -1,6 +1,6 @@
 <div>
 
-    <form method="POST" action="{{ route('reset-password.update', $user) }}">
+    <form method="POST" action="{{ route('auth.reset-password.update', $user) }}">
         @csrf
         @method('PATCH')
         <h1 class="text-2xl font-bold text-center">Reset Password</h1>

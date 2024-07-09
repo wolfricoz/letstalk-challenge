@@ -1,5 +1,5 @@
 <div>
-    <form class="space-y-4" method="POST" action="{{ route('request-reset') }}">
+    <form class="space-y-4" method="POST" action="{{ route('auth.request-reset') }}">
         <h1 class="text-2xl font-bold">Request Password Reset</h1>
         @csrf
         <div>

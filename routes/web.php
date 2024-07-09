@@ -19,17 +19,17 @@ Route::get('/unauthorized', function () {
 
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::get('login', [AuthController::class, 'index'])->name('login');
-    Route::post('login', [AuthController::class, 'authenticate'])->name('login.authenticate');
-    Route::get('register', [AuthController::class, 'register'])->name('register');
-    Route::put('register', [AuthController::class, 'store'])->name('register.store');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('reset-password/{reset_token?}', [PasswordController::class, 'index'])->name('reset-password');
-    Route::post('request-reset', [PasswordController::class, 'store'])->name('request-reset');
+    Route::get('login', [AuthController::class, 'index'])->name('auth.login');
+    Route::post('login', [AuthController::class, 'authenticate'])->name('auth.login.authenticate');
+    Route::get('register', [AuthController::class, 'register'])->name('auth.register');
+    Route::put('register', [AuthController::class, 'store'])->name('auth.register.store');
+    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::get('reset-password/{reset_token?}', [PasswordController::class, 'index'])->name('auth.reset-password');
+    Route::post('request-reset', [PasswordController::class, 'store'])->name('auth.request-reset');
     Route::get('confirmation', function () {
        return view('auth.confirmation');
-    })->name('confirmation');
-    Route::patch('reset-password/{user}', [PasswordController::class, 'update'])->name('reset-password.update');
+    })->name('auth.confirmation');
+    Route::patch('reset-password/{user}', [PasswordController::class, 'update'])->name('auth.reset-password.update');
 });
 
 Route::get('/post', [AdminController::class, 'index'])->name('admin.index');
