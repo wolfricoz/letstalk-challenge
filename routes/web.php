@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordController;
@@ -30,3 +31,5 @@ Route::group(['prefix' => 'auth'], function () {
     })->name('confirmation');
     Route::patch('reset-password/{user}', [PasswordController::class, 'update'])->name('reset-password.update');
 });
+
+Route::get('/post', [AdminController::class, 'index'])->name('admin.index');
