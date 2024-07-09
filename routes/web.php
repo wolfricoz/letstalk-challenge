@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\auth;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
@@ -22,5 +23,5 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('register', [AuthController::class, 'register'])->name('register');
     Route::put('register', [AuthController::class, 'store'])->name('register.store');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
+    Route::get('reset-password/{id?}/{reset_token?}', [PasswordController::class, 'index'])->name('reset-password');
 });

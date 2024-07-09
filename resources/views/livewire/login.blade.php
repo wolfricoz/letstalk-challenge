@@ -4,16 +4,19 @@
         @csrf
         <div>
             <label for="email">Email</label>
-            <input id="email" type="email" name="email" class="block" wire:model.live="email" required >
+            <input id="email" type="email" name="email" class="block" wire:model.live="email" required>
         </div>
         <div>
             <label for="password">Password</label>
             <input id="password" type="password" name="password" class="block" required wire:model.live="password">
         </div>
-        <label>
-            Remember Me
-            <input type="checkbox" name="remember">
-        </label>
+        <div>
+
+            <label>
+                Remember Me
+                <input type="checkbox" name="remember">
+            </label>
+        </div>
         @if ($errors->any())
             <div>
                 <ul>
@@ -23,8 +26,14 @@
                 </ul>
             </div>
         @endif
-        <div>
-            <button type="submit" >Login</button>
+        <div class="flex flex-row justify-between items-center content-center">
+            <x-primary-button>
+                Login
+            </x-primary-button>
+
+            <a href="{{ route('reset-password') }}">
+                Reset Password?
+            </a>
         </div>
     </form>
 </div>

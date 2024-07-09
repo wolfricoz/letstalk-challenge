@@ -123,7 +123,7 @@ services:
             DDEV_FILES_DIR: ""
             DDEV_FILES_DIRS: ""
             DDEV_HOSTNAME: letstalk-challenge.ddev.site
-            DDEV_MUTAGEN_ENABLED: "true"
+            DDEV_MUTAGEN_ENABLED: "false"
             DDEV_PHP_VERSION: "8.2"
             DDEV_PRIMARY_URL: https://letstalk-challenge.ddev.site
             DDEV_PROJECT: letstalk-challenge
@@ -144,8 +144,8 @@ services:
             GOARCH: amd64
             GOOS: linux
             HOST_DOCKER_INTERNAL_IP: ""
-            HTTP_EXPOSE: 80:80,8025:8025
-            HTTPS_EXPOSE: 443:80,8026:8025
+            HTTP_EXPOSE: 80:80,8025:8025,5172:5173
+            HTTPS_EXPOSE: 443:80,8026:8025,5173:5173
             IS_DDEV_PROJECT: "true"
             LINES: "14"
             MYSQL_HISTFILE: /mnt/ddev-global-cache/mysqlhistory/letstalk-challenge-web/mysql_history
@@ -161,6 +161,8 @@ services:
             USER: rico
             VIRTUAL_HOST: letstalk-challenge.ddev.site
             npm_config_cache: /mnt/ddev-global-cache/npm
+        expose:
+            - "5173"
         external_links:
             - ddev-router:letstalk-challenge.ddev.site
         healthcheck:
@@ -191,16 +193,10 @@ services:
         restart: "no"
         user: 1000:1000
         volumes:
-            - source: project_mutagen
-              target: /var/www
-              type: volume
-              volume:
-                nocopy: true
-            - source: project_mutagen
-              target: /tmp/project_mutagen
-              type: volume
-              volume:
-                nocopy: true
+            - consistency: cached
+              source: ../
+              target: /var/www/html
+              type: bind
             - bind:
                 create_host_path: true
               read_only: true
@@ -212,11 +208,6 @@ services:
               read_only: true
               source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.ddev/xhprof
               target: /usr/local/bin/xhprof
-              type: bind
-            - bind:
-                create_host_path: true
-              source: /mnt/c/Users/ricoi/PhpstormProjects/letstalk-challenge/.git
-              target: /var/www/html/.git
               type: bind
             - source: ddev-global-cache
               target: /mnt/ddev-global-cache
@@ -237,6 +228,3 @@ volumes:
     ddev-ssh-agent_socket_dir:
         external: true
         name: ddev-ssh-agent_socket_dir
-    project_mutagen:
-        external: true
-        name: letstalk-challenge_project_mutagen
