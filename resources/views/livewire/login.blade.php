@@ -1,6 +1,6 @@
 <div>
     <h1 class="text-2xl font-bold text-center">Login</h1>
-    <form method="POST" action="{{ route('auth.login.authenticate') }}">
+    <form method="POST" action="{{ route('auth.login.authenticate') }}" class="flex flex-col items-center">
         @csrf
         <div>
             <label for="email">Email</label>
@@ -26,8 +26,8 @@
                 </ul>
             </div>
         @endif
-        <div class="flex flex-row justify-between items-center content-center">
-            <x-primary-button>
+        <div class="flex flex-row justify-between items-center content-center w-full px-24">
+            <x-primary-button class="px-10">
                 Login
             </x-primary-button>
 

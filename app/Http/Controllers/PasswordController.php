@@ -37,6 +37,7 @@ class PasswordController extends Controller
 
         $user->update(['reset_token' => Str::random('64')]);
         try{
+//          This can be replaced with a queue job, to avoid blocking the user.
             Mail::to($user->email)->send(new resetPassword($user));
         }catch (\Exception){
             Log::error("Failed to send an email to {$user->email}");
