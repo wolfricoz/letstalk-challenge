@@ -23,6 +23,7 @@ class Authenticate
     public function createUser(array $data): static
     {
         $this->user = User::create($data);
+        Log::info('User created: ' . $this->user->name);
         return $this;
     }
 
@@ -42,6 +43,7 @@ class Authenticate
             $this->user = $user;
             return $this;
         }
+        Log::info('Failed login, couldnt get user: ' . $this->request->ip());
         return $this;
     }
 
@@ -57,7 +59,7 @@ class Authenticate
         auth()->login($this->user, $this->request->has('remember'));
         return true;
     }
-
+// Statis functions start here.
     public static function checkIp(Request $request): static
     {
         $instance = new self(null, $request);

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\CurrencyHelper;
 use App\Models\Conversions;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -27,11 +28,11 @@ class CurrencyConversion extends Component
     {
         $this->validate();
 
-        $conversions = Conversions::all()->where('from_currencies_id', '=', $this->selectedCurrency);
+        $conversions = Conversions::getConversion($this->selectedCurrency);
         foreach ($conversions as $conversion)
         {
             try{
-                $this->calculated[$conversion->name] = round($this->amount * $conversion->rate, 2, PHP_ROUND_HALF_UP);
+                $this->calculated[$conversion->name] = CurrencyHelper::calculate($this->amount, $conversion->rate);
             } catch (\Exception $e) {
                 $this->calculated[$conversion->name] = 'N/A';
                 Log::error("Error calculating conversion for currency {$conversion->name}:  {$e->getMessage()}");

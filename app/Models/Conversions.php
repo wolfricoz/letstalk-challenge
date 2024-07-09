@@ -11,6 +11,12 @@ class Conversions extends Model
 {
     protected $guarded = [];
 
+
+    public static function getConversion($currency)
+    {
+
+        return (new self())->all()->where('from_currencies_id', '=', $currency);
+    }
     public function from_currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'from_currencies_id', 'id');
