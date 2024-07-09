@@ -23,7 +23,7 @@ class UpdateCurrencies extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'This will fetch the currencies from the floatrates website and update the currencies in the database.';
 
     public array $currencyLocations = [];
 
@@ -116,9 +116,11 @@ class UpdateCurrencies extends Command
                 // This adds conversion data to the conversion table
                 $this->addConversionToCurrency($currencyresponse, $name);
             }
+            Log::info("$name has been processed");
             $this->info("$name has been processed");
 
         }
+        Log::info('The currencies have been updated');
         $this->info('The currencies have been updated');
 
     }
