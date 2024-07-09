@@ -14,6 +14,9 @@ class PasswordController extends Controller
 {
     public function index($reset_token = null)
     {
+        if (!$reset_token) {
+            return view('auth.reset-password');
+        }
         $user = User::where('reset_token', $reset_token)->first();
         return view('auth.reset-password',
             [
@@ -40,7 +43,7 @@ class PasswordController extends Controller
         }
 
 
-        return redirect()->route('confirmation');
+        return redirect()->route('auth.confirmation');
     }
 
     public function update(Request $request, User $user)
@@ -55,7 +58,7 @@ class PasswordController extends Controller
             'reset_token' => null,
         ]);
 
-        return redirect()->route('login');
+        return redirect()->route('auth.login');
     }
 
 

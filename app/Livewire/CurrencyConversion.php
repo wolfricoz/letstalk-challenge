@@ -26,6 +26,7 @@ class CurrencyConversion extends Component
     public function calculate()
     {
         $this->validate();
+
         $conversions = Conversions::all()->where('from_currencies_id', '=', $this->selectedCurrency);
         foreach ($conversions as $conversion)
         {

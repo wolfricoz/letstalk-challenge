@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\authentication\Authenticate;
 use App\Http\Middleware\auth;
 use App\Models\IpTable;
 use App\Models\User;
@@ -52,24 +53,15 @@ class AuthController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
+        $userdata =  $request->validate([
             'name' => 'required|min:6',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:12|confirmed',
             'password_confirmation' => 'required|min:12|same:password',
         ]);
-        if(!IpTable::check($request->ip())){
-            Log::info('Unauthorized IP: ' . $request->ip());
-            return redirect()->back()->withErrors('IP_NOT_AUTHORIZED');
-        }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        Authenticate::checkIp($request)->createUser($userdata)->loginUser();
 
-        auth()->login($user, $request->has('remember'));
 
         return redirect()->route('home');
     }

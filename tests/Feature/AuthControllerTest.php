@@ -17,7 +17,7 @@ class AuthControllerTest extends TestCase
 
     public function testIndex()
     {
-        $response = $this->get(route('login'));
+        $response = $this->get(route('auth.login'));
 
         $response->assertStatus(200);
         $response->assertViewIs('auth.login');
@@ -25,7 +25,7 @@ class AuthControllerTest extends TestCase
 
     public function testRegister()
     {
-        $response = $this->get(route('register'));
+        $response = $this->get(route('auth.register'));
 
         $response->assertStatus(200);
         $response->assertViewIs('auth.register');
@@ -37,7 +37,7 @@ class AuthControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->post(route('logout'));
+        $response = $this->post(route('auth.logout'));
 
         $response->assertRedirect(route('home'));
         $this->assertGuest();
@@ -55,7 +55,7 @@ class AuthControllerTest extends TestCase
 
 
 
-        $response = $this->put(route('register.store'), $userData);
+        $response = $this->put(route('auth.register.store'), $userData);
 
         $response->assertRedirect(route('home'));
 
@@ -75,7 +75,7 @@ class AuthControllerTest extends TestCase
         $user = User::factory()->create([
             'password' => Hash::make('Password123456'),
         ]);
-        $response = $this->post(route('login.authenticate'), [
+        $response = $this->post(route('auth.login.authenticate'), [
             'email' => $user->email,
             'password' => 'Password123456',
         ]);
